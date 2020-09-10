@@ -1,0 +1,91 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.connectPanel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    box-orient: horizontal;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+}
+
+.overlayUI {
+    position: absolute;
+    z-index: 9;
+    text-align: center;
+    pointer-events: all;
+}
+
+#mydivheader {
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+}
+
+.gamePaneltop {
+    background-color: #3b3a3a;
+    color: white;
+    opacity: 0.6;
+}
+
+.gameOverview {
+    height: 200px;
+    background-color: #3b3a3a;
+    color: white;
+    opacity: 0.6;
+}
+
+:root {
+    /* Base colors */
+    --tp-base-background-color: hsl(230deg, 5%, 90%);
+    --tp-base-shadow-color: hsla(0, 0%, 0%, 0.1);
+    /* Button-like control colors */
+    --tp-button-background-color: hsl(230deg, 5%, 70%);
+    --tp-button-background-color-active: hsl(230deg, 5%, 55%);
+    --tp-button-background-color-focus: hsl(230deg, 5%, 60%);
+    --tp-button-background-color-hover: hsl(230deg, 5%, 65%);
+    --tp-button-foreground-color: hsl(230deg, 5%, 20%);
+    /* Folder colors */
+    --tp-folder-background-color: hsl(230deg, 5%, 80%);
+    --tp-folder-background-color-active: hsl(230deg, 5%, 65%);
+    --tp-folder-background-color-focus: hsl(230deg, 5%, 70%);
+    --tp-folder-background-color-hover: hsl(230deg, 5%, 75%);
+    --tp-folder-foreground-color: var(--tp-input-foreground-color);
+    /* Input control colors */
+    --tp-input-background-color: hsl(230deg, 5%, 85%);
+    --tp-input-background-color-active: hsl(230deg, 5%, 70%);
+    --tp-input-background-color-focus: hsl(230deg, 5%, 75%);
+    --tp-input-background-color-hover: hsl(230deg, 5%, 80%);
+    --tp-input-foreground-color: hsl(230deg, 5%, 30%);
+    --tp-input-guide-color: hsla(230deg, 5%, 30%, 10%);
+    /* Monitor control colors */
+    --tp-monitor-background-color: var(--tp-input-background-color);
+    --tp-monitor-foreground-color: hsl(230deg, 5%, 60%);
+    /* Misc */
+    --tp-label-foreground-color: hsl(230deg, 5%, 50%);
+    --tp-separator-color: hsl(230deg, 5%, 85%);
+}
