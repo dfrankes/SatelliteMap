@@ -12,27 +12,6 @@ body {
     pointer-events: none;
 }
 
-.connectPanel {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    width: 100%;
-    height: 100%;
-    display: -webkit-box;
-    display: -moz-box;
-    display: box;
-    -webkit-box-orient: horizontal;
-    -moz-box-orient: horizontal;
-    box-orient: horizontal;
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    box-pack: center;
-    -webkit-box-align: center;
-    -moz-box-align: center;
-    box-align: center;
-}
-
 .overlayUI {
     position: absolute;
     z-index: 9;
@@ -88,4 +67,24 @@ body {
     /* Misc */
     --tp-label-foreground-color: hsl(230deg, 5%, 50%);
     --tp-separator-color: hsl(230deg, 5%, 85%);
+}
+
+.tab-pane {
+    background-color: #989898;
+}
+
+container-fluid,
+.divBackground {
+    background-color: #989898;
+}
+
+.nav-tabs {
+    background-color: white;
+}
+
+.table-wrapper {
+    max-height: 850px;
+    overflow: auto;
+    width: 100%;
+    display: inline-block;
 }

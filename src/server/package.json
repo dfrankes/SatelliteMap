@@ -1,0 +1,26 @@
+{
+    "name": "satellitemap-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "server": "nodemon src/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Davy Frankes",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.20.0",
+        "body-parser": "^1.19.0",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "glob": "^7.1.6",
+        "meteor-random": "0.0.3",
+        "moment": "^2.27.0",
+        "mongodb": "^3.6.2",
+        "readdirp": "^3.4.0",
+        "syntax-error": "^1.4.0",
+        "tle.js": "^4.1.0",
+        "underscore": "^1.11.0"
+    }
+}

@@ -10,10 +10,19 @@ A realtime 3D satellite map created with ThreeJS and Node, use this tool track t
 - Show visible satellites based on your 
 - more...
 
-## How to run
+
+## How to run client
 ```bash
+cd src/client/;
 npm install
 npm run dev
-npm run server
 open http://localhost:5000
+```
+
+## How to run Server
+```bash
+cd src/server/;
+npm install
+created .env
+npm run dev
 ```

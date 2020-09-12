@@ -15,7 +15,8 @@ class RendererManager {
     startup = () => {
         this.renderer = new WebGLRenderer({ antialias: true });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(this.renderer.domElement);
+        document.getElementById('renderer').appendChild(this.renderer.domElement);
+        // document.body.appendChild(this.renderer.domElement);
         window.addEventListener('resize', this.onWindowResize, false);
     }
 

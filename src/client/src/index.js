@@ -14,7 +14,7 @@ import _ from 'underscore';
 globalThis._ = _;
 globalThis.uuid = require('uuidv4');
 globalThis.dat = dat;
-
+globalThis.axios = require('axios');
 
 import SatelliteMapScene from './App/Engine/Scenes/SatelliteMapScene';
 

@@ -12,6 +12,7 @@ import { AmbientLight, PointLight } from 'three';
 
 
 import EngineLayers from "./Enumerators/EngineLayers";
+import InputKeyCode from './Enumerators/Input.keyCode';
 
 // Import UI Elements
 import Panel from './Components/UI/Elements/Panel';
@@ -61,7 +62,8 @@ class API {
     }
 
     Enumerators = {
-        EngineLayers
+        EngineLayers,
+        KeyCode: InputKeyCode
     }
 
     // Still need to place these in a group

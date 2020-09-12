@@ -14,7 +14,7 @@ class Input {
 
     setupEventListeners = () => {
         this.clearInputs();
-        let domRoot = Engine.rendererManager.renderer.domElement;
+        let domRoot = document.querySelector('canvas');
 
         domRoot.addEventListener('mousedown', (event) => {
             this.inputs.mouse.state = KeyCode.DOWN;

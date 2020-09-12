@@ -12,6 +12,11 @@ const { getLatLngObj, getSatelliteInfo } = require("tle.js/dist/tlejs.cjs");
 
 import AssetLoader from '../Components/Loaders/AssetLoader';
 import _ from 'underscore';
+import Component from '../Components/Component';
+
+
+import Handlebars from 'handlebars';
+import Navigator from './SatelliteMapScene/Modules/Navigator';
 
 export default class SatelliteMapScene extends API.Components.Scene {
     constructor() { super() }
@@ -44,7 +49,6 @@ export default class SatelliteMapScene extends API.Components.Scene {
             // Destroy the panel
             this.assetLoader.destroy();
 
-
             // Create earth sphere
             var geometry = new THREE.SphereGeometry(this.earthRadis, 64, 64);
             var sphere = new THREE.Mesh(geometry, material);
@@ -55,8 +59,11 @@ export default class SatelliteMapScene extends API.Components.Scene {
     }
 
     onStart = async() => {
+        // Setup the menu
+        const navigator = new Navigator(this);
+
         // Set the assetLoader base url
-        this.assetLoader.setUrl('http://localhost:8080');
+        this.assetLoader.setUrl('http://localhost:3002');
 
 
         // Create a new camera and assign it to this scene
@@ -88,10 +95,7 @@ export default class SatelliteMapScene extends API.Components.Scene {
         this.add(directionalLight);
 
 
-        // Orbit Prediction code
-        // POC
-        //
-
+        return;
 
         // Create a 24 hour period with a 10 second interval
         const total = 24 * 60 * 60 / 10;
