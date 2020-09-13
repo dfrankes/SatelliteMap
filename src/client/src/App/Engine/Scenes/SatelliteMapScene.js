@@ -1,3 +1,10 @@
+/**
+ * //TODO
+ * A lot of code inside this file and the SatelliteMapScene folder will be replaced in the future.
+ * Cleanup the managers, Make earth into its own component etc etc
+ * implement the AssetLoader into the new UI (looks way better), or maby make the whole ui based on "dynamic tabs"?
+ */
+
 import Engine from '../../Engine';
 const API = Engine.API;
 const THREE = API.THREE;
@@ -23,7 +30,8 @@ export default class SatelliteMapScene extends API.Components.Scene {
 
     assetLoader = new AssetLoader();
     earthRadis = 6371; // Radius in KM
-    trackedObjects = [];
+    trackedObjects = localStorage.getItem("trackedObjects") || [];
+
 
     earthSphere = async() => {
         return await new Promise(async resolve => {
@@ -93,11 +101,5 @@ export default class SatelliteMapScene extends API.Components.Scene {
 
         // Setup the menu
         const navigator = new Navigator(this);
-
-        // Hook array push events
-        this.trackedObjects.push = function() {
-            Array.prototype.push.apply(this, arguments);
-            navigator.refreshTrackedObjects();
-        };
     }
 }

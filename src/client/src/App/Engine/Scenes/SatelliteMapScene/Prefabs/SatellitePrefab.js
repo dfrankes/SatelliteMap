@@ -1,8 +1,9 @@
 import Component from '../../../Components/Component';
 import CartesianToVector from '../../../Helpers/Math/CartesianToVector';
-import { Color, SphereGeometry, MeshBasicMaterial, Mesh, BufferGeometry, Line, Vector3 } from 'three';
+import { Color, SphereGeometry, MeshBasicMaterial, Mesh, BufferGeometry, Line, Vector3, LogLuvEncoding } from 'three';
 const { getLatLngObj, getSatelliteInfo } = require("tle.js/dist/tlejs.cjs");
 import API from '../../../API';
+import engineInstance from '../../../../Engine';
 
 export default class SatellitePrefab extends Component {
 
@@ -15,6 +16,8 @@ export default class SatellitePrefab extends Component {
     constructor(satelliteInfo) {
         super();
 
+        if (typeof satelliteInfo.info !== "object") return;
+
 
         this.satelliteName = satelliteInfo.name;
         this.satelliteId = satelliteInfo.satelliteId;
@@ -23,6 +26,7 @@ export default class SatellitePrefab extends Component {
             satelliteInfo.lines[0],
             satelliteInfo.lines[1],
         ]
+
 
         this.info = getSatelliteInfo(this.tle);
 
@@ -40,6 +44,8 @@ export default class SatellitePrefab extends Component {
 
 
     onStart = () => {
+
+        if (typeof this.info !== "object") return;
 
         // Calculate the current loaction in 3D space
         const vector = CartesianToVector([this.info.lat, this.info.lng], this.info.height);
@@ -75,8 +81,25 @@ export default class SatellitePrefab extends Component {
             this.pointer.geometry = new BufferGeometry().setFromPoints([this.mesh.position, new Vector3(0, 0, 0)]);
         }, 1000);
 
-        const activeScene = API.Managers.SceneManager.getActiveScene();
-        activeScene.trackedObjects.push(this);
+        // const activeScene = API.Managers.SceneManager.getActiveScene();
+        // activeScene.trackedObjects.push(this);
 
+    }
+
+
+    onFixedUpdate = (data) => {
+        if (this.follow) {
+            const activeScene = engineInstance.sceneManager.getActiveScene();
+            const activeCamera = activeScene.getActiveCamera();
+
+
+            const vector = CartesianToVector([this.info.lat, this.info.lng], this.info.height + 1500);
+
+            activeCamera.controls.target.set(0, 0, 0)
+
+            activeCamera.position.x = vector.x;
+            activeCamera.position.y = vector.y;
+            activeCamera.position.z = vector.z;
+        }
     }
 }

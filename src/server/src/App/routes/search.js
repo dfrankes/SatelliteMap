@@ -1,11 +1,11 @@
 module.exports = [{
-        method: "get",
+        method: "post",
         parameters: [],
         custom_url: false,
         middleware: false,
         request: async(req, res, next) => {
-            const query = req.query.search;
-            let results = await SatelliteMap.db.collection('satellites').find({ name: { "$regex": query, '$options': 'i' } }).toArray();
+            const query = req.body.query;
+            let results = await SatelliteMap.db.collection('satellites').find({ name: { "$regex": query, '$options': 'i' } }, { limit: 10 }).toArray();
             results = results.map(result => {
                 result.text = result.name;
                 result.id = result.satelliteId

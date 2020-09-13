@@ -48,6 +48,8 @@
         "codemirror": "^5.56.0",
         "core-js": "^2.6.11",
         "dat.gui": "^0.7.7",
+        "datatables": "^1.10.18",
+        "datatables.net-dt": "^1.10.21",
         "dotenv": "^8.2.0",
         "esserializer": "^1.0.0",
         "express": "^4.17.1",

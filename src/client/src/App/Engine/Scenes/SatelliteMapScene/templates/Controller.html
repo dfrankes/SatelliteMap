@@ -1,30 +1,29 @@
 <div class="d-flex flex-column bd-highlight fixed-bottom divBackground">
-
-
-
-    <!-- Custom tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="current-tab" href="#current" aria-controls="current"><i class="fas fa-satellite"></i> Satellite Tracking</a>
         </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="search-tab" href="#search" aria-controls="search"><i class="fas fa-satellite"></i> Search</a>
+        <li class="nav-item mr-auto">
+            <a class="nav-link" href="#"><input type="text" placeholder="Search object..." class="form-control" style="height: 25px;" id="searchInput"></a>
         </li>
         <li class="nav-item ml-auto">
             <a class="nav-link" href="#">Made with <i class="fab fa-node-js" style="color:green"></i> on <i class="fas fa-globe-europe" style="color:darkblue"></i></a>
-
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Github <i class="fab fa-github" style="color:black"></i></a>
         </li>
     </ul>
-
     <div class="tab-content h-50" id="myTabContent">
-        <div class="tab-pane fade active show" id="current" role="tabpanel" aria-labelledby="current-tab">
-            <div id="trackedObjects"></div>
-        </div>
-        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
-            <select class="search form-control" style="width:100% !important;">
-                <option value="">Search...</option>
-            </select>
-            <div id="satelliteInfo" class="mt-1"></div>
+        <div class="tab-pane fade active show table-wrapper" id="current" role="tabpanel" aria-labelledby="current-tab">
+            <table id="table" class="table table-dark" data-search="false" data-toggle="table">
+                <thead>
+                    <tr>
+                        <th data-field="id">ID</th>
+                        <th data-field="name">Name</th>
+                    </tr>
+                </thead>
+            </table>
+
         </div>
     </div>
 </div>

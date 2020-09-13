@@ -2,6 +2,7 @@ import Handlebars from 'handlebars';
 import ServerAPI from '../Components/ServerAPI';
 import SatellitePrefab from '../Prefabs/SatellitePrefab';
 import API from '../../../API';
+import engineInstance from '../../../../Engine';
 
 export default class Navigator {
     nav = null;
@@ -29,21 +30,8 @@ export default class Navigator {
         jQuery('#mapUI').append(this.nav);
         jQuery('.table-wrapper').css('max-height', jQuery('#innerContent').innerHeight());
 
-
-        // Create SELECT2
-        jQuery('.search').select2({
-            ajax: {
-                url: 'http://localhost:3002/search',
-                dataType: 'json',
-                data: (params) => {
-                    return { search: params.term }
-                }
-            }
-        });
-
-
         // Load from localStorage
-        let trackedItems = JSON.parse(localStorage.getItem("trackedSatellites")) || [];
+        let trackedItems = JSON.parse(localStorage.getItem("trackedObjects")) || [];
         trackedItems.forEach(item => {
             const satellite = new SatellitePrefab(item);
             this.activeScene.add(satellite);
@@ -55,6 +43,100 @@ export default class Navigator {
 
         this.setMaxWindowHeight()
         window.addEventListener('resize', this.setMaxWindowHeight, false);
+
+
+        const trackedObjects = JSON.parse(localStorage.getItem("trackedObjects")) || [];
+
+        // Setup table
+        let detailSource = require('../templates/table/satelliteDetails.html');
+        $('#table').bootstrapTable({
+            data: trackedObjects,
+            detailView: true,
+            defaultViewByClick: true,
+            detailFormatter: (index, item, element) => {
+                let template = Handlebars.compile(detailSource);
+                return template(item);
+            },
+            columns: [{
+                    field: 'satelliteId',
+                    'title': 'ID',
+                },
+                {
+                    'field': 'name',
+                    'title': 'Name'
+                },
+                {
+                    field: "info.lat",
+                    title: "Latitude"
+                },
+                {
+                    field: "info.lng",
+                    title: "Longitude"
+                },
+                {
+                    'field': false,
+                    'title': '',
+                    clickToSelect: false,
+                    formatter: (value, row, index) => {
+
+                        const trackedObjects = JSON.parse(localStorage.getItem("trackedObjects")) || [];
+                        const tracking = _.findWhere(trackedObjects, { _id: row._id });
+                        if (tracking) {
+                            return [
+                                '<button class="btn btn-sm btn-primary mr-1" id="enableSatellite"><i class="fa fa-check"></i> Enable</button>',
+                                '<button class="btn btn-sm btn-primary mr-1" id="followSatellite"><i class="fa fa-plus"></i> Follow Satellite</button>',
+                                '<button class="btn btn-sm btn-primary mr-1" id="showOrbitObject"><i class="fa fa-plus"></i> Show Satellite Orbit</button>',
+                                '<button class="btn btn-sm btn-primary mr-1" id="showOrbitObject"><i class="fa fa-minus"></i> Remove Satellite</button>',
+                            ].join('')
+                        }
+
+                        return [
+                            '<button class="btn btn-sm btn-primary" id="addSatelliteBtn"><i class="fa fa-plus"></i> Track Object</button>',
+                        ].join('')
+                    },
+                    events: {
+                        'click #addSatelliteBtn': (event, value, row, index) => {
+                            // Remove from the search results, so we can add it later.btn-primary
+
+                            $('#table').bootstrapTable('remove', { field: '$index', values: [index] });
+                            $('#table').bootstrapTable('refreshOptions', {
+                                showColumns: false,
+                                search: false,
+                                showRefresh: false,
+                            });
+
+                            // Add object to our trackedObjectsList
+                            let trackedObjects = JSON.parse(localStorage.getItem("trackedObjects")) || [];
+                            trackedObjects.push(row);
+                            localStorage.setItem("trackedObjects", JSON.stringify(trackedObjects));
+
+                            $('#table').bootstrapTable('prepend', row);
+                        },
+                        'click #followSatellite': (event, value, row, index) => {
+                            const scene = engineInstance.sceneManager.getActiveScene();
+
+                            // Disable follows for all objects
+                            const allSatellites = _.filter(scene.children, (child) => child.type === 'satellite');
+                            allSatellites.forEach(item => item.follow = false);
+
+                            const satelliteObject = _.findWhere(scene.children, { satelliteId: row.satelliteId });
+                            satelliteObject.follow = true;
+                            row.follow = true;
+                        }
+                    }
+                },
+
+            ]
+        });
+
+
+        jQuery('canvas').on('mousedown', () => {
+            // Unset the classes for all nav-links
+            jQuery('.nav-link').removeClass('active');
+            jQuery('.tab-pane').removeClass('active');
+            jQuery('.tab-pane').removeClass('show');
+        })
+
     }
 
 
@@ -79,12 +161,8 @@ export default class Navigator {
 
 
     refreshTrackedObjects = () => {
-        // Load template HTML
-        let navSource = require('../templates/TrackedObjects.html');
-        let template = Handlebars.compile(navSource);
-        const html = template({ objects: API.Managers.SceneManager.getActiveScene().trackedObjects });
-
-        jQuery('#trackedObjects').html(html)
+        let trackedObjects = JSON.parse(localStorage.getItem("trackedObjects")) || [];
+        jQuery('#table').bootstrapTable('load', trackedObjects);
     }
 
     unregisterEvents = () => {
@@ -104,11 +182,31 @@ export default class Navigator {
     helpers = {}
 
     events = {
+        'input #searchInput': async(event) => {
+            setTimeout(async() => {
+                const value = jQuery(event.target).val();
+                const $table = jQuery('#table').bootstrapTable();
+
+                if (value === "") {
+                    let trackedObjects = JSON.parse(localStorage.getItem("trackedObjects")) || [];
+                    jQuery('#table').bootstrapTable('load', trackedObjects);
+                    return;
+                }
+
+                // Get Satallite Info
+                const request = await this.serverAPI.request('post', 'search', { query: value });
+                let data = request.data.results;
+
+                if (data) {
+                    jQuery('#table').bootstrapTable('load', data);
+                }
+            }, 1000)
+        },
         'click .nav-link': (event) => {
 
             const isActive = jQuery(event.target).hasClass('active');
             const tabTarget = jQuery(event.target).attr('aria-controls');
-
+            if (!tabTarget) return;
 
             if (!isActive) {
 
@@ -128,49 +226,7 @@ export default class Navigator {
                 jQuery(`#${tabTarget}`).removeClass('show');
                 jQuery(`#${tabTarget}`).removeClass('active');
             }
-
-
             event.preventDefault();
-        },
-        'click #myCoolButton': (event) => {
-            console.log("event!");
-        },
-        'change .search': async(event) => {
-            const satalliteId = jQuery(event.target).val();
-
-            // Get Satallite Info
-            const request = await this.serverAPI.request('get', 'search/' + satalliteId);
-            const data = request.data.satallite;
-
-            if (data) {
-                let panelSource = require('../templates/satellitePanel.html');
-                let template = Handlebars.compile(panelSource);
-                const html = template(data);
-                jQuery('#satelliteInfo').html(html);
-
-                this.unregisterEvents();
-                this.registerEvents();
-            }
-        },
-        'click #addSatellite': async(event) => {
-            const satelliteId = jQuery(event.target).data('satelliteid');
-            const request = await this.serverAPI.request('get', 'search/' + satelliteId);
-            const data = request.data.satallite;
-
-            if (data) {
-                const satellite = new SatellitePrefab(data);
-                this.activeScene.add(satellite);
-
-                // Add satellite to cookie
-                let current = JSON.parse(localStorage.getItem("trackedSatellites")) || [];
-                current.push(data);
-                localStorage.setItem("trackedSatellites", JSON.stringify(current));
-
-                jQuery('#satelliteInfo').html(``);
-                jQuery('.nav-link').removeClass('active');
-                jQuery('.tab-pane').removeClass('active');
-                jQuery('.tab-pane').removeClass('show');
-            }
         }
     }
 }
