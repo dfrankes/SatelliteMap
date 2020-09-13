@@ -88,3 +88,8 @@ container-fluid,
     width: 100%;
     display: inline-block;
 }
+
+.caret.caret-up {
+    border-top-width: 0;
+    border-bottom: 4px solid #fff;
+}

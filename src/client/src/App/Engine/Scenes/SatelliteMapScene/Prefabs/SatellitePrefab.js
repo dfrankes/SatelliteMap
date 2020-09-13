@@ -2,6 +2,7 @@ import Component from '../../../Components/Component';
 import CartesianToVector from '../../../Helpers/Math/CartesianToVector';
 import { Color, SphereGeometry, MeshBasicMaterial, Mesh, BufferGeometry, Line, Vector3 } from 'three';
 const { getLatLngObj, getSatelliteInfo } = require("tle.js/dist/tlejs.cjs");
+import API from '../../../API';
 
 export default class SatellitePrefab extends Component {
 
@@ -29,6 +30,12 @@ export default class SatellitePrefab extends Component {
         this.locationImage = null;
 
 
+        this.name = this.satelliteName;
+        this.type = 'satellite';
+        this.satelliteInfo = satelliteInfo;
+
+
+        this.randomBodyId = Math.random().toString(36).substring(7); // this is stupid....
     }
 
 
@@ -67,10 +74,9 @@ export default class SatellitePrefab extends Component {
 
             this.pointer.geometry = new BufferGeometry().setFromPoints([this.mesh.position, new Vector3(0, 0, 0)]);
         }, 1000);
-    }
 
-
-    onFixedUpdate = () => {
+        const activeScene = API.Managers.SceneManager.getActiveScene();
+        activeScene.trackedObjects.push(this);
 
     }
 }

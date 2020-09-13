@@ -1,43 +1,30 @@
-<div id="Controller" class="h-100 divBackground">
-    <div style="height:95% !important;" id="innerContent">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="current" aria-selected="true"><i class="fas fa-satellite"></i> Satellite Tracking</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="search-tab" data-toggle="tab" href="#search" role="tab" aria-controls="search" aria-selected="true"><i class="fas fa-satellite"></i> Search</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="current-tab">
-                <div class="table-wrapper">
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th scope="row">Satellite Name</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Meteor M2</td>
-                                <td>
-                                    <button class="btn btn-secondary btn-sm" type="button"><i class="fas fa-times-circle"></i> Remove</button>
-                                    <button class="btn btn-secondary btn-sm" type="button"><i class="fas fa-forward"></i> Follow</button>
-                                    <button class="btn btn-secondary btn-sm" type="button"><i class="fas fa-stream"></i> Info</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
-                <select class="search form-control" style="width:100% !important;"></select>
-                <div id="satelliteInfo" class="mt-1"></div>
-            </div>
+<div class="d-flex flex-column bd-highlight fixed-bottom divBackground">
+
+
+
+    <!-- Custom tabs -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="current-tab" href="#current" aria-controls="current"><i class="fas fa-satellite"></i> Satellite Tracking</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="search-tab" href="#search" aria-controls="search"><i class="fas fa-satellite"></i> Search</a>
+        </li>
+        <li class="nav-item ml-auto">
+            <a class="nav-link" href="#">Made with <i class="fab fa-node-js" style="color:green"></i> on <i class="fas fa-globe-europe" style="color:darkblue"></i></a>
+
+        </li>
+    </ul>
+
+    <div class="tab-content h-50" id="myTabContent">
+        <div class="tab-pane fade active show" id="current" role="tabpanel" aria-labelledby="current-tab">
+            <div id="trackedObjects"></div>
         </div>
-    </div>
-    <div style="height:5% !important;" class="text-center mr-1">
-        Made with <i class="fab fa-node-js" style="color:green"></i> on <i class="fas fa-globe-europe" style="color:darkblue"></i>
+        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
+            <select class="search form-control" style="width:100% !important;">
+                <option value="">Search...</option>
+            </select>
+            <div id="satelliteInfo" class="mt-1"></div>
+        </div>
     </div>
 </div>

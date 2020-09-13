@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars';
 import ServerAPI from '../Components/ServerAPI';
 import SatellitePrefab from '../Prefabs/SatellitePrefab';
+import API from '../../../API';
 
 export default class Navigator {
     nav = null;
@@ -39,10 +40,27 @@ export default class Navigator {
                 }
             }
         });
+
+
+        // Load from localStorage
+        let trackedItems = JSON.parse(localStorage.getItem("trackedSatellites")) || [];
+        trackedItems.forEach(item => {
+            const satellite = new SatellitePrefab(item);
+            this.activeScene.add(satellite);
+        });
+
+        this.refreshTrackedObjects();
+        jQuery('#mapUI').removeClass('d-none');
+
+
+        this.setMaxWindowHeight()
+        window.addEventListener('resize', this.setMaxWindowHeight, false);
     }
 
-    helpers = {
 
+    setMaxWindowHeight = () => {
+        const wrapper = jQuery('.table-wrapper');
+        wrapper.css('max-height', window.innerHeight / 4 + 'px');
     }
 
     registerEvents = () => {
@@ -60,6 +78,15 @@ export default class Navigator {
     }
 
 
+    refreshTrackedObjects = () => {
+        // Load template HTML
+        let navSource = require('../templates/TrackedObjects.html');
+        let template = Handlebars.compile(navSource);
+        const html = template({ objects: API.Managers.SceneManager.getActiveScene().trackedObjects });
+
+        jQuery('#trackedObjects').html(html)
+    }
+
     unregisterEvents = () => {
         Object.keys(this.events).forEach(event => {
             event.split().forEach(e => {
@@ -72,7 +99,39 @@ export default class Navigator {
             })
         });
     }
+
+
+    helpers = {}
+
     events = {
+        'click .nav-link': (event) => {
+
+            const isActive = jQuery(event.target).hasClass('active');
+            const tabTarget = jQuery(event.target).attr('aria-controls');
+
+
+            if (!isActive) {
+
+                // Unset the classes for all nav-links
+                jQuery('.nav-link').removeClass('active');
+                jQuery('.tab-pane').removeClass('active');
+                jQuery('.tab-pane').removeClass('show');
+
+
+
+                jQuery(event.target).addClass('active');
+
+                jQuery(`#${tabTarget}`).addClass('show');
+                jQuery(`#${tabTarget}`).addClass('active');
+            } else {
+                jQuery(event.target).removeClass('active');
+                jQuery(`#${tabTarget}`).removeClass('show');
+                jQuery(`#${tabTarget}`).removeClass('active');
+            }
+
+
+            event.preventDefault();
+        },
         'click #myCoolButton': (event) => {
             console.log("event!");
         },
@@ -101,6 +160,16 @@ export default class Navigator {
             if (data) {
                 const satellite = new SatellitePrefab(data);
                 this.activeScene.add(satellite);
+
+                // Add satellite to cookie
+                let current = JSON.parse(localStorage.getItem("trackedSatellites")) || [];
+                current.push(data);
+                localStorage.setItem("trackedSatellites", JSON.stringify(current));
+
+                jQuery('#satelliteInfo').html(``);
+                jQuery('.nav-link').removeClass('active');
+                jQuery('.tab-pane').removeClass('active');
+                jQuery('.tab-pane').removeClass('show');
             }
         }
     }
