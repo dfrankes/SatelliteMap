@@ -1,93 +1,88 @@
+import Handlebars from 'handlebars';
+
 class UI {
     $domRoot;
     elements = [];
+    tabs = [];
 
     constructor() {
         if (!UI.instance) {
             UI.instance = this;
         }
 
-        this.removeOld('EngineUI');
+        this.cleanUp();
 
-        this.$domRoot = jQuery('<div></div>');
-        this.$domRoot.attr({
-            id: 'EngineUI',
-            class: 'overplay',
-        })
+        // Load our base UI template
+        let UITemplate = require('./UI/Templates/UI.html');
+        let template = Handlebars.compile(UITemplate);
+        const html = template({});
+
+        this.$domRoot = jQuery(html);
+        this.tabs = [];
 
         jQuery('body').append(this.$domRoot);
 
-        this.center = function(id) {
-            let element = jQuery('#' + id);
-            element.css({
-                position: 'absolute',
-                top: window.innerHeight / 2 - element.outerHeight(),
-                left: window.innerWidth / 2 - ($(jQuery(element).children()[0]).innerWidth() / 2),
-                'pointer-events': 'none'
-            })
-            return element;
-        }
+
+        this.registerEvents();
+
         return UI.instance;
     }
 
 
-    createElement = (attr) => {
-        this.removeOld(attr.id);
-        const $element = jQuery('<div></div>');
-        $element.attr(attr);
-
-        this.$domRoot.append($element);
-        this.elements.push($element);
-
-        return $element;
-    }
-
-
-    removeElement = (element_id) => {
-        document.getElementById(element_id).remove();
-    }
-
-    dragElement = (elmnt) => {
-        var pos1 = 0,
-            pos2 = 0,
-            pos3 = 0,
-            pos4 = 0;
-        if (document.getElementById(elmnt.id)) {
-            document.getElementById(elmnt.id).onmousedown = dragMouseDown;
-        } else {
-            elmnt.onmousedown = dragMouseDown;
-        }
-
-        function dragMouseDown(e) {
-            e = e || window.event;
-            e.preventDefault();
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-        }
-
-        function elementDrag(e) {
-            e = e || window.event;
-            e.preventDefault();
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-        }
-
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
+    cleanUp = (element_id = 'EngineUI') => {
+        if (document.getElementById(element_id)) {
+            document.getElementById(element_id).remove()
         }
     }
 
 
-    removeOld = (id) => {
-        if (document.getElementById(id))
-            document.getElementById(id).remove();
+    createTab = (tab) => {
+        this.tabs.push(tab);
+
+        // Append tabTitle
+        this.$domRoot.find('#tabList').prepend(tab.tabHeader)
+        this.$domRoot.find('#tabContent').append(tab.tabContent)
+        this.registerEvents();
+        tab.tabScript(tab);
+    }
+
+    registerEvents = () => {
+        // Register all events
+        Object.keys(this.events).forEach(event => {
+            event.split().forEach(e => {
+                const triggerEvent = e.split(" ")[0];
+                const triggerElement = e.split(" ")[1];
+                const foundElem = this.$domRoot.find(triggerElement);
+                if (foundElem) {
+                    foundElem.unbind();
+                    foundElem.on(triggerEvent, (ev) => this.events[event](ev));
+                }
+            })
+        });
+    }
+
+    events = {
+        'click .nav-link': (event) => {
+
+            const isActive = jQuery(event.target).hasClass('active');
+            const tabTarget = jQuery(event.target).parent();
+
+
+            const tab = _.findWhere(this.tabs, { id: tabTarget.attr('id') });
+            const allTabs = this.tabs.filter(item => item.id !== tabTarget.attr('id'));
+
+            if (!tabTarget || tabTarget.hasClass('no-trigger') || !tab) return;
+
+            allTabs.forEach(item => item.hideTab());
+
+            // Enable tab
+            if (isActive) {
+                tab.hideTab();
+                return;
+            }
+            tab.displayTab();
+            event.preventDefault();
+        }
     }
 }
 

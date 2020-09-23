@@ -1,7 +1,3 @@
-/**
- * 3DEngine Core file
- * Created by Davy Frankes
- */
 import API from './Engine/API';
 class Engine {
 

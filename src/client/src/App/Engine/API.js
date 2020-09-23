@@ -7,15 +7,10 @@ import * as THREE from 'three';
 import UI from './Components/UI';
 import Input from './Components/Input';
 
-import { Vector3, GridHelper } from 'three';
-import { AmbientLight, PointLight } from 'three';
-
-
 import EngineLayers from "./Enumerators/EngineLayers";
 import InputKeyCode from './Enumerators/Input.keyCode';
 
 // Import UI Elements
-import Panel from './Components/UI/Elements/Panel';
 import DefaultCamera from './Components/Cameras/DefaultCamera';
 import TrackballCamera from './Components/Cameras/TrackballCamera';
 
@@ -35,7 +30,7 @@ class API {
         UI: {
             UIManager: UI,
             Elements: {
-                Panel
+
             },
             dat
         },

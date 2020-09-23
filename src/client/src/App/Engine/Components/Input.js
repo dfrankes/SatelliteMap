@@ -1,5 +1,4 @@
 import KeyCode from '../Enumerators/Input.keyCode';
-import Engine from '../../Engine';
 class Input {
 
     inputs = {}

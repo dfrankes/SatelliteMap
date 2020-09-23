@@ -34,6 +34,11 @@ require('.\\App\\includes.js');
         const TLE = require('./App/classes/TLE.js');
         const tle = new TLE();
 
+        const Landsat = require('./App/classes/Landsat.js');
+        const landsat = new Landsat();
+
+        // landsat.syncScenes();
+
 
         // await tle.getAllSatellites();
 
@@ -83,6 +88,7 @@ require('.\\App\\includes.js');
                             if (method.middleware) {
                                 SatelliteMap.app.use(`${path}`, catchAsyncErrors(method.middleware.function));
                             }
+                            path = path.replace('\\', '/');
                             path = path.replace('\\', '/');
                             SatelliteMap.app[method.method](`${path}`, catchAsyncErrors(method.request));
                         }

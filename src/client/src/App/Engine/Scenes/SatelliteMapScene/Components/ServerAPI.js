@@ -1,5 +1,5 @@
 export default class ServerAPI {
-    api_url = 'http://localhost:3002';
+    api_url = `http://api.${window.location.hostname}`;
     constructor() {
 
     }

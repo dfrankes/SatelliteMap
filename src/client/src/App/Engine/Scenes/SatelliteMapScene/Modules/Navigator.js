@@ -57,6 +57,7 @@ export default class Navigator {
                 let template = Handlebars.compile(detailSource);
                 return template(item);
             },
+            uniqueId: "satelliteId",
             columns: [{
                     field: 'satelliteId',
                     'title': 'ID',
@@ -67,14 +68,27 @@ export default class Navigator {
                 },
                 {
                     field: "info.lat",
-                    title: "Latitude"
+                    title: "Latitude",
+                    formatter: (value, row, index, id) => {
+                        return Number(value).toFixed(5) + '°';
+                    }
                 },
                 {
                     field: "info.lng",
-                    title: "Longitude"
+                    title: "Longitude",
+                    formatter: (value, row, index, id) => {
+                        return Number(value).toFixed(5) + '°';
+                    }
                 },
                 {
-                    'field': false,
+                    field: "info.velocity",
+                    title: "Velocity",
+                    formatter: (value, row, index, id) => {
+                        return Number(value).toFixed(2) + ' km/s';
+                    }
+                },
+                {
+                    'field': 'actions',
                     'title': '',
                     clickToSelect: false,
                     formatter: (value, row, index) => {
@@ -82,11 +96,17 @@ export default class Navigator {
                         const trackedObjects = JSON.parse(localStorage.getItem("trackedObjects")) || [];
                         const tracking = _.findWhere(trackedObjects, { _id: row._id });
                         if (tracking) {
+                            const scene = engineInstance.sceneManager.getActiveScene();
+                            const satelliteObject = _.findWhere(scene.children, { satelliteId: row.satelliteId });
+
+
                             return [
+                                '<div class="float-right">',
                                 '<button class="btn btn-sm btn-primary mr-1" id="enableSatellite"><i class="fa fa-check"></i> Enable</button>',
-                                '<button class="btn btn-sm btn-primary mr-1" id="followSatellite"><i class="fa fa-plus"></i> Follow Satellite</button>',
-                                '<button class="btn btn-sm btn-primary mr-1" id="showOrbitObject"><i class="fa fa-plus"></i> Show Satellite Orbit</button>',
-                                '<button class="btn btn-sm btn-primary mr-1" id="showOrbitObject"><i class="fa fa-minus"></i> Remove Satellite</button>',
+                                `<button class="btn btn-sm btn-${satelliteObject.follow && row.follow ? 'danger' : 'primary'} mr-1" id="${satelliteObject.follow && row.follow ? 'unfollowSatellite' : 'followSatellite'}"><i class="fa fa-${satelliteObject.follow && row.follow ? 'minus' : 'plus'}"></i> Follow</button>`,
+                                '<button class="btn btn-sm btn-primary mr-1" id="showOrbitObject"><i class="fa fa-plus"></i> Show Orbit</button>',
+                                '<button class="btn btn-sm btn-primary mr-1" id="showOrbitObject"><i class="fa fa-minus"></i> Remove</button>',
+                                '</div>'
                             ].join('')
                         }
 
@@ -95,6 +115,9 @@ export default class Navigator {
                         ].join('')
                     },
                     events: {
+                        'click #enableSatellite': (event, value, row, index) => {
+
+                        },
                         'click #addSatelliteBtn': (event, value, row, index) => {
                             // Remove from the search results, so we can add it later.btn-primary
 
@@ -122,6 +145,17 @@ export default class Navigator {
                             const satelliteObject = _.findWhere(scene.children, { satelliteId: row.satelliteId });
                             satelliteObject.follow = true;
                             row.follow = true;
+
+                            jQuery('#table').bootstrapTable('updateCellByUniqueId', { id: row.id, field: 'actions', value: row })
+                        },
+                        'click #unfollowSatellite': (event, value, row, index) => {
+                            const scene = engineInstance.sceneManager.getActiveScene();
+                            const allSatellites = _.filter(scene.children, (child) => child.type === 'satellite');
+
+                            allSatellites.forEach(item => item.follow = false);
+                            row.follow = false;
+
+                            jQuery('#table').bootstrapTable('updateCellByUniqueId', { id: row.id, field: 'actions', value: row })
                         }
                     }
                 },

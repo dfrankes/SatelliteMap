@@ -1,5 +1,3 @@
-import Engine from '../../Engine.js';
-
 class SceneManager {
     DevUI = null;
     scenes = [];

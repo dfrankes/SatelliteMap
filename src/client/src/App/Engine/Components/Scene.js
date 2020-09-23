@@ -1,7 +1,4 @@
-import Engine from '../../Engine';
-import { Scene as ThreeScene, AxesHelper, ObjectLoader, Object3D } from 'three';
-import DeveloperTools from '../Components/Tools/DeveloperTools';
-
+import { Scene as ThreeScene, AxesHelper, Object3D } from 'three';
 
 export default class Scene extends ThreeScene {
     sceneCamera = false;

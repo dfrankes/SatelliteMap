@@ -93,3 +93,10 @@ container-fluid,
     border-top-width: 0;
     border-bottom: 4px solid #fff;
 }
+
+
+/* 
+.jsgrid-grid-header,
+.jsgrid-grid-body {
+    overflow-y: hidden !important;
+} */

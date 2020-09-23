@@ -1,6 +1,5 @@
 import { WebGLRenderer } from 'three';
 import Engine from '../../Engine.js';
-import { setTimeout } from 'core-js';
 
 class RendererManager {
     renderer = null;
