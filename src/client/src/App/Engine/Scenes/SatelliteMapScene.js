@@ -48,7 +48,6 @@ export default class SatelliteMapScene extends API.Components.Scene {
     }
 
     onStart = async() => {
-
         // Load from localStorage
         this.trackedItems = JSON.parse(localStorage.getItem("trackedObjects")) || [];
 
@@ -56,7 +55,7 @@ export default class SatelliteMapScene extends API.Components.Scene {
 
 
         this.SearchTab = new Tab({
-            tabTitle: '<input type="text" placeholder="Search object..." class="form-control d-none" style="height: 25px;" id="searchInput"/>',
+            tabTitle: '<input type="text" placeholder="STARLINK-" class="form-control d-none" style="height: 25px;" id="searchInput"/>',
             tabTitleClass: 'table-wrapper',
             tabContent: false,
             tabHeaderEvents: {
@@ -67,17 +66,10 @@ export default class SatelliteMapScene extends API.Components.Scene {
 
                         if (value === "") {
                             let trackedObjects = JSON.parse(localStorage.getItem("trackedObjects")) || [];
-                            jQuery('#table').bootstrapTable('load', trackedObjects);
+                            $("#jsGrid").jsGrid("loadData");
                             return;
                         }
-
-                        // Get Satallite Info
-                        const request = await this.serverAPI.request('post', 'search', { query: value });
-                        let data = request.data.results;
-
-                        if (data) {
-                            jQuery('#table').bootstrapTable('load', data);
-                        }
+                        $("#jsGrid").jsGrid("search", value);
                     }, 1000)
                 }
             }
@@ -108,8 +100,12 @@ export default class SatelliteMapScene extends API.Components.Scene {
 
                         const isEnabled = row.enabled || false;
                         const isFollowing = row.following || false;
+                        const isSatelliteStored = (satId => {
+                            return _.findWhere(activeScene.trackedItems, {_id: satId}) ? true : false;
+                        });
 
-                        const buttons = [{
+                        const buttons = [
+                            {
                                 isEnabled: !isEnabled,
                                 html: `<button class="btn btn-sm float-right btn-danger mr-1"><i class="fa fa-minus"></i> Remove</button>`
                             },
@@ -121,6 +117,12 @@ export default class SatelliteMapScene extends API.Components.Scene {
 
                                     const scene = engineInstance.sceneManager.getActiveScene();
                                     const satelliteObject = _.findWhere(scene.children, { satelliteId: row.satelliteId });
+
+                                    if(!isSatelliteStored(row.satelliteId)){
+                                        activeScene.trackedItems = [...activeScene.trackedItems, row];
+                                        localStorage.setItem("trackedObjects", JSON.stringify(activeScene.trackedItems))
+                                    }
+
                                     if (!satelliteObject) {
                                         const satellite = new SatellitePrefab(row);
                                         scene.add(satellite);
@@ -176,7 +178,24 @@ export default class SatelliteMapScene extends API.Components.Scene {
                     sorting: false,
                     paging: false,
 
-                    data: activeScene.trackedItems,
+                    // data: activeScene.trackedItems,
+                    autoload: true,
+                    controller: {
+                        loadData: function (filter = false) {
+
+                            if(filter === "" || Object.keys(filter).length === 0){
+                                return activeScene.trackedItems;
+                            }
+
+                            return new Promise(async resolve => {
+                                let api = new ServerAPI();
+                                const request = await api.request('post', 'search', { query: filter });
+                                let data = request.data.results;
+
+                                resolve([...activeScene.trackedItems, ...data])
+                            })
+                        }
+                    },
                     fields: [
                         { name: "satelliteId", title: 'Norad ID', type: "text", width: 50 },
                         { name: "name", title: 'Name', type: "text", width: 100 },
