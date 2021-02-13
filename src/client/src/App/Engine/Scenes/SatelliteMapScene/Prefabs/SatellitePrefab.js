@@ -16,13 +16,14 @@ export default class SatellitePrefab extends Component {
     info;
     date = new Date();
     assetLoader = new AssetLoader();
-
+    mesh = null;
+    
     constructor(satelliteInfo) {
         super();
 
 
         if (typeof satelliteInfo.info !== "object") {
-            jQuery('#table').bootstrapTable('updateCellByUniqueId', { id: this.id, field: 'actions', value: '' });
+            // jQuery('#table').bootstrapTable('updateCellByUniqueId', { id: this.id, field: 'actions', value: '' });
             return;
         }
 
@@ -76,21 +77,21 @@ export default class SatellitePrefab extends Component {
         this.pointer = new Line(geometry, this.material);
         this.add(this.pointer);
 
-        this.fixedLoop = setInterval(() => {
-            // Calculate new position
-            this.info = getSatelliteInfo(this.tle);
+        // this.fixedLoop = setInterval(() => {
+        //     // Calculate new position
+        //     this.info = getSatelliteInfo(this.tle);
 
-            const vector = CartesianToVector([this.info.lat, this.info.lng], this.info.height);
-            this.mesh.position.x = vector.x;
-            this.mesh.position.z = vector.z;
-            this.mesh.position.y = vector.y;
-
-
-            this.pointer.geometry = new BufferGeometry().setFromPoints([this.mesh.position, new Vector3(0, 0, 0)]);
-        }, 1000);
+        //     const vector = CartesianToVector([this.info.lat, this.info.lng], this.info.height);
+        //     this.mesh.position.x = vector.x;
+        //     this.mesh.position.z = vector.z;
+        //     this.mesh.position.y = vector.y;
 
 
-        jQuery('#table').bootstrapTable('updateCellByUniqueId', { id: this.id, field: 'actions', value: '' })
+        //     this.pointer.geometry = new BufferGeometry().setFromPoints([this.mesh.position, new Vector3(0, 0, 0)]);
+        // }, 1000);
+
+
+        // jQuery('#table').bootstrapTable('updateCellByUniqueId', { id: this.id, field: 'actions', value: '' })
     }
 
 

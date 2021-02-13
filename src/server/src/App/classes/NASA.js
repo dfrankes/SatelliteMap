@@ -1,6 +1,6 @@
 export default class NASA {
     api_key = 'DEMO_KEY';
-    api_url = 'https://api.optiply.com/v1'
+    api_url = ''
     constructor() {
 
     }

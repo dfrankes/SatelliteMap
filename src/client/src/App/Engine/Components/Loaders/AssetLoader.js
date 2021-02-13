@@ -22,7 +22,7 @@ export default class AssetLoader {
             const element = textures[i];
 
             if (showLoading) {
-                this.UIManager.$domRoot.find('#loaderItem').html(`<img src="https://i.imgur.com/KV8Y5DU.gif" width="16"> Loading textures (${i + 1}/${textures.length}) | ${element.name} ${element.url}`)
+                this.UIManager.innerHTML = `<img src="https://i.imgur.com/KV8Y5DU.gif" width="16"> Loading textures (${i + 1}/${textures.length}) | ${element.name} ${element.url}`
             }
             const texture = await new Promise(resolve => {
                 loader.load(`${this.baseUrl}${element.url}`, (texture) => {
@@ -32,7 +32,7 @@ export default class AssetLoader {
             returnTextures.push({...element, texture })
         }
 
-        this.UIManager.$domRoot.find('#loaderItem').html(` `)
+        this.UIManager.innerHTML = ` `
         return returnTextures;
     }
 }

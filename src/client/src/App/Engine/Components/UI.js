@@ -9,7 +9,7 @@ class UI {
         if (!UI.instance) {
             UI.instance = this;
         }
-
+        
         this.cleanUp();
 
         // Load our base UI template

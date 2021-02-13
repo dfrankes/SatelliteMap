@@ -4,7 +4,7 @@ import Engine from '../../../Engine';
 
 export default class DefaultCamera {
 
-    constructor(fov = 70, aspect = window.innerWidth / window.innerHeight, near = 0.01, far = 10000000) {
+    constructor(fov = 50, aspect = window.innerWidth / window.innerHeight, near = 20, far = Math.pow(10, 1000)) {
         _.extend(this, new PerspectiveCamera());
 
         this.name = "SceneCamera";

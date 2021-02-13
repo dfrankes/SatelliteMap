@@ -17,6 +17,8 @@ globalThis.dat = dat;
 globalThis.axios = require('axios');
 
 import SatelliteMapScene from './App/Engine/Scenes/SatelliteMapScene';
+import LoadingScene from './App/Engine/Scenes/LoadingScene';
 
 import Engine from './App/Engine.js';
-Engine.startup({ scene: SatelliteMapScene });
+Engine.startup({ scene: LoadingScene });
+window.EngineInstance = Engine;

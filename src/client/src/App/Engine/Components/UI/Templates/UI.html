@@ -1,23 +1,53 @@
 <div id="EngineUI" class="overlay">
-    <div class="d-flex flex-column bd-highlight fixed-bottom divBackground" style="pointer-events: all;">
 
-        <!-- Tabs -->
-        <ul class="nav nav-tabs" id="tabList" role="tablist">
+    <style>
+        .fixed-top {
+            position: fixed;
+            top: 0;
+            right: unset !important;
+            left: 0;
+            z-index: 1030;
+        }
+    </style>
+    <div class="d-flex flex-column bd-highlight fixed-top" style="pointer-events: all; right: -1 !important;">
+        <div class="card bg-dark h-100 border-info d-sm-none d-md-block" style="width:auto;min-width: 390px;">
+            <div class="card-header text-center toggleSettings" style="cursor: pointer;">
+                <strong style="margin-right:10px;margin-top:10px;">SatelliteMap</strong> 
+            </div>
+            <!-- <button class="btn btn-sm btn-info float-end toggleSettings mb-2"><i class="fas fa-satellite"></i></button> -->
+            <!-- <div class="card-header text-center">
+                SatelliteMap <button class="btn btn-sm btn-info btn-block float-end toggleSettings"><i class="fas fa-satellite"></i></button>
+            </div> -->
+            <div class="card-header bg-info d-none loaderDiv">Loading assets....</div>
+            <div class="card-body d-none" id="settingsPanel">
+                <p class="card-text">
 
-            <li class="nav-item ml-auto mr-auto">
-                <a class="nav-link no-trigger" id="loaderItem" style="font-weight: bold;"></a>
-            </li>
-            <li class="nav-item ml-auto">
-                <a class="nav-link no-trigger" href="https://nodejs.org/en/" target="_new">Made with <i class="fab fa-node-js" style="color:green"></i> on <i class="fas fa-globe-europe" style="color:darkblue"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link no-trigger" href="https://github.com/dfrankes/SatelliteMap" target="_new">Github <i class="fab fa-github" style="color:black"></i></a>
-            </li>
-        </ul>
-
-        <!-- Tab Content -->
-        <div class="tab-content h-50" id="tabContent">
-
+                    <button class="btn btn-outline-secondary" type="button" id="toggleSet" data-set="ALL"><i class="fas fa-satellite"></i> ALL</button>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleSet" data-set="STARLINK"><i class="fas fa-satellite"></i> STARLINK</button>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleSet" data-set="ISS"><i class="fas fa-satellite"></i> ISS</button>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleSet" data-set="DEBRIS"><i class="fas fa-satellite"></i> Debris</button>
+                    <div class="input-group">
+                        <input class="form-control" placeholder="Search database">
+                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <table class="table table-dark table-striped d-none">
+                        <thead>
+                          <tr>
+                            <th scope="col">Norad ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">44713</th>
+                            <td>STARLINK-1007</td>
+                            <td><button class="btn btn-sm btn-primary">Follow</button></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </p>
+            </div>
         </div>
     </div>
 </div>

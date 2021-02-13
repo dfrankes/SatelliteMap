@@ -48,7 +48,7 @@ class TLE {
         let members = [].concat(request.data.member);
 
         const pages = totalItems / maxPerPage;
-        for (let i = 2; i < pages; i++) {
+        for (let i = 2; i <= pages; i++) {
             const page = await this.request('GET', '?page-size=100&page=' + i);
             members = members.concat(page.data.member);
 
