@@ -5,7 +5,7 @@
 A realtime 3D satellite map created with ThreeJS and Node, use this tool track the position of any satellite or space stations realtime in 3D
 
 
-Preview
+Preview https://dfrankes.nl/Ghee9dQGPe.gif
 ![Preview](https://dfrankes.nl/Ghee9dQGPe.gif "Preview")
 
 ## Roadmap
